@@ -3,50 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenEye Corporation</title>
+    <title>OpenEye Corporation - Creators Hub</title>
     <style>
         body {
             background-color: #121212;
             color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
+            padding: 40px 20px;
+            box-sizing: border-box;
         }
-        .container {
+        .header {
             text-align: center;
-            background-color: #1e1e1e;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            margin-bottom: 40px;
         }
         h1 {
             color: #00adb5;
-            margin-bottom: 10px;
+            margin: 0 0 10px 0;
         }
         p {
             color: #eeeeee;
-            margin-bottom: 25px;
+            margin: 0;
         }
-        audio {
+        /* Grid system for layout */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .video-card {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+        }
+        .creator-name {
+            color: #00adb5;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .video-title {
+            color: #eeeeee;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            background-color: #000;
+            border-radius: 8px;
+            margin-top: auto;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 300px;
+            height: 100%;
+            border: 0;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="header">
         <h1>OpenEye Corporation</h1>
-        <p>Welcome to our official website. Enjoy the music.</p>
-        
-        <audio controls autoplay>
-            <source src="track.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
+        <p>Latest Creator Uploads</p>
     </div>
+
+    <div class="video-grid" id="creators-feed"></div>
+
+    <script>
+        // List of your chosen creators and their respective YouTube Channel IDs
+        const creators = [
+            { name: "Flamingo", id: "UCuAXFkgcljRry_-Ks2A3qNg" },
+            { name: "CaseOh", id: "UC63anZxfVGHUEmfBAf5w7pw" },
+            { name: "SMII7Y", id: "UC8S7as7pInUuG0fO8ZgYV0g" },
+            { name: "Downloadable Content", id: "UCXW6S6L9b7Gv383m75V3IQA" }
+        ];
+
+        const gridContainer = document.getElementById('creators-feed');
+
+        // Loop through each creator and fetch their latest video
+        creators.forEach(creator => {
+            const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${creator.id}`;
+            const apiServiceUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+
+            fetch(apiServiceUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.items && data.items.length > 0) {
+                        const latestVideo = data.items[0];
+                        const videoTitle = latestVideo.title;
+                        const videoId = latestVideo.link.split('v=')[1];
+
+                        // Create the HTML elements for each video box
+                        const card = document.createElement('div');
+                        card.className = 'video-card';
+                        card.innerHTML = `
+                            <div class="creator-name">${creator.name}</div>
+                            <div class="video-title" title="${videoTitle}">${videoTitle}</div>
+                            <div class="video-container">
+                                <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
+                            </div>
+                        `;
+                        
+                        gridContainer.appendChild(card);
+                    }
+                })
+                .catch(error => {
+                    console.error(`Error loading feed for ${creator.name}:`, error);
+                });
+        });
+    </script>
 
 </body>
 </html>
