@@ -165,6 +165,7 @@
             color: #00adb5;
             border-bottom: 1px solid #333;
             padding-bottom: 10px;
+            margin-bottom: 15px;
         }
         .sound-btn {
             background-color: #00adb5;
@@ -177,17 +178,11 @@
             font-weight: bold;
         }
         .sound-btn:hover { background-color: #008c95; }
-        .placeholder-chat {
-            background-color: #2b2b2b;
-            border: 2px dashed #444;
+        
+        .chat-container {
             border-radius: 8px;
-            height: 300px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #888;
-            text-align: center;
-            padding: 20px;
+            overflow: hidden;
+            background-color: #fff;
         }
 
         /* Mobile adaptation layout toggle rules */
@@ -218,7 +213,7 @@
         </div>
     </div>
 
-        <script>
+    <script>
         const creators = [
             { name: "Flamingo", id: "UCm-X6o81nRsXQTmqpyArkBQ" },
             { name: "CaseOh", id: "UC63anZxfVGHUEmfBAf5w7pw" },
@@ -259,11 +254,8 @@
 
                     <div class="exp-card">
                         <h3>Global Chat Room</h3>
-                        <div class="placeholder-chat">
-                            <div>
-                                <p>Ready for an external widget!</p>
-                                <small>Sign up at <strong>Cbox.ws</strong> or <strong>Chatango.com</strong> to get a free snippet, then paste their code right here to activate live chat.</small>
-                            </div>
+                        <div class="chat-container">
+                            <iframe src="https://www3.cbox.ws/box/?boxid=3555819&boxtag=mTeSCj" width="100%" height="450" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
                         </div>
                     </div>
                 </div>
@@ -353,3 +345,6 @@
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
         }
     </script>
+
+</body>
+</html>
