@@ -147,11 +147,55 @@
             color: #00adb5;
         }
 
+        /* Experimentation Lab Styling */
+        .exp-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .exp-card {
+            background-color: #1e1e1e;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .exp-card h3 {
+            margin-top: 0;
+            color: #00adb5;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+        .sound-btn {
+            background-color: #00adb5;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .sound-btn:hover { background-color: #008c95; }
+        .placeholder-chat {
+            background-color: #2b2b2b;
+            border: 2px dashed #444;
+            border-radius: 8px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #888;
+            text-align: center;
+            padding: 20px;
+        }
+
         /* Mobile adaptation layout toggle rules */
         @media (max-width: 768px) {
             body { flex-direction: column; }
             .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #2d2d2d; }
             .main-content { padding: 20px; }
+            .exp-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -164,6 +208,7 @@
         <button class="nav-btn" id="btn-1" onclick="loadFeed(1)">CaseOh</button>
         <button class="nav-btn" id="btn-2" onclick="loadFeed(2)">SMII7Y</button>
         <button class="nav-btn" id="btn-3" onclick="loadFeed(3)">Downloadable Content</button>
+        <button class="nav-btn" id="btn-exp" onclick="showExperimentation()">Experimentation</button>
     </div>
 
     <div class="main-content" id="content-panel">
@@ -174,7 +219,6 @@
     </div>
 
     <script>
-        // Array updated with your exact confirmed Channel IDs
         const creators = [
             { name: "Flamingo", id: "UCm-X6o81nRsXQTmqpyArkBQ" },
             { name: "CaseOh", id: "UC63anZxfVGHUEmfBAf5w7pw" },
@@ -195,10 +239,57 @@
             `;
         }
 
+        function showExperimentation() {
+            clearActiveButtons();
+            document.getElementById('btn-exp').classList.add('active');
+            
+            contentPanel.innerHTML = `
+                <h1 class="creator-title">Experimentation Lab</h1>
+                <p>Testing ground for community widgets and tools.</p>
+                
+                <div class="exp-grid">
+                    <div class="exp-card">
+                        <h3>Interactive Soundboard</h3>
+                        <p>Click to trigger synth sound effects:</p>
+                        <button class="sound-btn" onclick="playSound(261.63)">Note C</button>
+                        <button class="sound-btn" onclick="playSound(329.63)">Note E</button>
+                        <button class="sound-btn" onclick="playSound(392.00)">Note G</button>
+                        <button class="sound-btn" onclick="playSound(523.25)">High C</button>
+                    </div>
+
+                    <div class="exp-card">
+                        <h3>Global Chat Room</h3>
+                        <div class="placeholder-chat">
+                            <div>
+                                <p>Ready for an external widget!</p>
+                                <small>Sign up at <strong>Cbox.ws</strong> or <strong>Chatango.com</strong> to get a free snippet, then paste their code right here to activate live chat.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Simple built-in synthesizer sound board experiment function
+        function playSound(frequency) {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.5);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.5);
+        }
+
         function loadFeed(index) {
             clearActiveButtons();
             document.getElementById(`btn-${index}`).classList.add('active');
-            
             contentPanel.innerHTML = `<h2>Loading feed parameters...</h2>`;
             
             const creator = creators[index];
@@ -213,7 +304,6 @@
                         const latestVideo = totalVideos[0];
                         const latestId = latestVideo.link.split('v=')[1];
 
-                        // Build page layout with updated secure, privacy-enhanced video player parameters
                         let htmlContent = `
                             <h1 class="creator-title">${creator.name}</h1>
                             <div class="video-title">Latest Upload: ${latestVideo.title}</div>
@@ -244,7 +334,7 @@
                                         <div class="thumbnail-box" style="background-image: url('https://img.youtube.com/vi/${pastId}/mqdefault.jpg');"></div>
                                         <div class="past-title">${pastVid.title}</div>
                                     </a>
-                                `;
+                                ];
                             }
                             htmlContent += `</div>`;
                         }
