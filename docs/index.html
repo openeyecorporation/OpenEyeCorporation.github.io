@@ -174,14 +174,13 @@
     </div>
 
     <script>
-        // Updated Array with exact verified native YouTube IDs
-const creators = [
-    { name: "Flamingo", id: "UCm9wqBcoLecXp1V8_7vKImA" },
-    { name: "CaseOh", id: "UC63anZxfVGHUEmfBAf5w7pw" },
-    { name: "SMII7Y", id: "UC8S7as7pInUuG0fO8ZgYV0g" },
-    { name: "DownloadableContent", id: "UCqUYE55bMrBfHTxJX7DE-uQ" }
-    
-    ];
+        // Array updated with your exact confirmed Channel IDs
+        const creators = [
+            { name: "Flamingo", id: "UCm-X6o81nRsXQTmqpyArkBQ" },
+            { name: "CaseOh", id: "UC63anZxfVGHUEmfBAf5w7pw" },
+            { name: "SMII7Y", id: "UCzXwjTI6c6mVn6oui_p6oiw" },
+            { name: "Downloadable Content", id: "UCqUYE55bMrBfHTxJX7DE-uQ" }
+        ];
 
         const contentPanel = document.getElementById('content-panel');
 
@@ -214,12 +213,19 @@ const creators = [
                         const latestVideo = totalVideos[0];
                         const latestId = latestVideo.link.split('v=')[1];
 
-                        // Build page string templates sequentially 
+                        // Build page layout with updated secure, privacy-enhanced video player parameters
                         let htmlContent = `
                             <h1 class="creator-title">${creator.name}</h1>
                             <div class="video-title">Latest Upload: ${latestVideo.title}</div>
                             <div class="video-container">
-                                <iframe src="https://www.youtube.com/embed/${latestId}" allowfullscreen></iframe>
+                                <iframe 
+                                    src="https://www.youtube-nocookie.com/embed/${latestId}" 
+                                    title="YouTube video player" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                    referrerpolicy="strict-origin-when-cross-origin"
+                                    allowfullscreen>
+                                </iframe>
                             </div>
                         `;
 
@@ -245,7 +251,7 @@ const creators = [
 
                         contentPanel.innerHTML = htmlContent;
                     } else {
-                        contentPanel.innerHTML = `<h2>Could not load videos for ${creator.name}.</h2>`;
+                        contentPanel.innerHTML = `<h2>Could not load videos for ${creator.name}. Make sure the channel has public uploads.</h2>`;
                     }
                 })
                 .catch(error => {
