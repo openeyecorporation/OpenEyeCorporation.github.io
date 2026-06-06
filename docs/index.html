@@ -3,57 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenEye Corporation - Creators Hub</title>
+    <title>OpenEye Corporation - Dashboard</title>
     <style>
         body {
             background-color: #121212;
             color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 40px 20px;
-            box-sizing: border-box;
+            display: flex;
+            min-height: 100vh;
         }
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        h1 {
-            color: #00adb5;
-            margin: 0 0 10px 0;
-        }
-        p {
-            color: #eeeeee;
-            margin: 0;
-        }
-        /* Grid system for layout */
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .video-card {
+
+        /* Sidebar navigation */
+        .sidebar {
+            width: 260px;
             background-color: #1e1e1e;
+            border-right: 1px solid #2d2d2d;
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             display: flex;
             flex-direction: column;
+            gap: 10px;
+            box-sizing: border-box;
         }
-        .creator-name {
-            color: #00adb5;
-            font-size: 1.2rem;
+        .logo-area {
+            font-size: 1.4rem;
             font-weight: bold;
-            margin-bottom: 5px;
+            color: #00adb5;
+            padding: 10px 0 20px 0;
+            border-bottom: 1px solid #2d2d2d;
+            margin-bottom: 10px;
+        }
+        .nav-btn {
+            background: none;
+            border: none;
+            color: #aaaaaa;
+            text-align: left;
+            padding: 12px 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover {
+            background-color: #252525;
+            color: #ffffff;
+        }
+        .nav-btn.active {
+            background-color: #00adb5;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        /* Main content viewer panel */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        /* Video Showcase Layout */
+        .creator-title {
+            color: #00adb5;
+            font-size: 2.2rem;
+            margin: 0 0 20px 0;
         }
         .video-title {
             color: #eeeeee;
-            font-size: 0.95rem;
-            margin-bottom: 15px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
         }
         .video-container {
             position: relative;
@@ -61,8 +79,9 @@
             height: 0;
             overflow: hidden;
             background-color: #000;
-            border-radius: 8px;
-            margin-top: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            margin-bottom: 40px;
         }
         .video-container iframe {
             position: absolute;
@@ -72,19 +91,90 @@
             height: 100%;
             border: 0;
         }
+
+        /* Past Videos Row Grid */
+        .past-section-title {
+            font-size: 0.9rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+        .past-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        .past-card {
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .past-card:hover {
+            transform: translateY(-3px);
+            background-color: #252525;
+        }
+        .thumbnail-box {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            background-size: cover;
+            background-position: center;
+        }
+        .past-title {
+            padding: 12px;
+            font-size: 0.85rem;
+            color: #ddd;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+        }
+
+        /* Home welcome view state styling */
+        .welcome-view {
+            text-align: center;
+            margin-top: 10vh;
+        }
+        .welcome-view h2 {
+            font-size: 2.5rem;
+            color: #00adb5;
+        }
+
+        /* Mobile adaptation layout toggle rules */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #2d2d2d; }
+            .main-content { padding: 20px; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>OpenEye Corporation</h1>
-        <p>Latest Creator Uploads</p>
+    <div class="sidebar">
+        <div class="logo-area">OpenEye Corp</div>
+        <button class="nav-btn active" onclick="showHome()">Home</button>
+        <button class="nav-btn" id="btn-0" onclick="loadFeed(0)">Flamingo</button>
+        <button class="nav-btn" id="btn-1" onclick="loadFeed(1)">CaseOh</button>
+        <button class="nav-btn" id="btn-2" onclick="loadFeed(2)">SMII7Y</button>
+        <button class="nav-btn" id="btn-3" onclick="loadFeed(3)">Downloadable Content</button>
     </div>
 
-    <div class="video-grid" id="creators-feed"></div>
+    <div class="main-content" id="content-panel">
+        <div class="welcome-view">
+            <h2>Welcome to OpenEye Corporation</h2>
+            <p>Select a creator from the menu to load their latest uploads instantly.</p>
+        </div>
+    </div>
 
     <script>
-        // List of your chosen creators and their respective YouTube Channel IDs
+        // Data arrays holding target names and hardcoded creator account numbers
         const creators = [
             { name: "Flamingo", id: "UCuAXFkgcljRry_-Ks2A3qNg" },
             { name: "CaseOh", id: "UC63anZxfVGHUEmfBAf5w7pw" },
@@ -92,10 +182,26 @@
             { name: "Downloadable Content", id: "UCXW6S6L9b7Gv383m75V3IQA" }
         ];
 
-        const gridContainer = document.getElementById('creators-feed');
+        const contentPanel = document.getElementById('content-panel');
 
-        // Loop through each creator and fetch their latest video
-        creators.forEach(creator => {
+        function showHome() {
+            clearActiveButtons();
+            document.querySelector('button[onclick="showHome()"]').classList.add('active');
+            contentPanel.innerHTML = `
+                <div class="welcome-view">
+                    <h2>Welcome to OpenEye Corporation</h2>
+                    <p>Select a creator from the menu to load their latest uploads instantly.</p>
+                </div>
+            `;
+        }
+
+        function loadFeed(index) {
+            clearActiveButtons();
+            document.getElementById(`btn-${index}`).classList.add('active');
+            
+            contentPanel.innerHTML = `<h2>Loading feed parameters...</h2>`;
+            
+            const creator = creators[index];
             const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${creator.id}`;
             const apiServiceUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
 
@@ -103,28 +209,53 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.items && data.items.length > 0) {
-                        const latestVideo = data.items[0];
-                        const videoTitle = latestVideo.title;
-                        const videoId = latestVideo.link.split('v=')[1];
+                        const totalVideos = data.items.slice(0, 4);
+                        const latestVideo = totalVideos[0];
+                        const latestId = latestVideo.link.split('v=')[1];
 
-                        // Create the HTML elements for each video box
-                        const card = document.createElement('div');
-                        card.className = 'video-card';
-                        card.innerHTML = `
-                            <div class="creator-name">${creator.name}</div>
-                            <div class="video-title" title="${videoTitle}">${videoTitle}</div>
+                        // Build page string templates sequentially 
+                        let htmlContent = `
+                            <h1 class="creator-title">${creator.name}</h1>
+                            <div class="video-title">Latest Upload: ${latestVideo.title}</div>
                             <div class="video-container">
-                                <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
+                                <iframe src="https://www.youtube.com/embed/${latestId}" allowfullscreen></iframe>
                             </div>
                         `;
-                        
-                        gridContainer.appendChild(card);
+
+                        if (totalVideos.length > 1) {
+                            htmlContent += `
+                                <div class="past-section-title">Previous Videos</div>
+                                <div class="past-grid">
+                            `;
+
+                            for (let i = 1; i < totalVideos.length; i++) {
+                                const pastVid = totalVideos[i];
+                                const pastId = pastVid.link.split('v=')[1];
+
+                                htmlContent += `
+                                    <a class="past-card" href="${pastVid.link}" target="_blank">
+                                        <div class="thumbnail-box" style="background-image: url('https://img.youtube.com/vi/${pastId}/mqdefault.jpg');"></div>
+                                        <div class="past-title">${pastVid.title}</div>
+                                    </a>
+                                `;
+                            }
+                            htmlContent += `</div>`;
+                        }
+
+                        contentPanel.innerHTML = htmlContent;
+                    } else {
+                        contentPanel.innerHTML = `<h2>Could not load videos for ${creator.name}.</h2>`;
                     }
                 })
                 .catch(error => {
-                    console.error(`Error loading feed for ${creator.name}:`, error);
+                    console.error(error);
+                    contentPanel.innerHTML = `<h2>Error connecting to network feed services.</h2>`;
                 });
-        });
+        }
+
+        function clearActiveButtons() {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        }
     </script>
 
 </body>
